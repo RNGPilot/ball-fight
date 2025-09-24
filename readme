@@ -1,77 +1,45 @@
-Kinetiq (Work in Progress)
+Kinetiq
+=======
 
-Kinetiq is a physics-driven auto-battler where circular fighters bounce around an arena with rotating melee arms. Players don’t control the fighters — battles resolve automatically through physics, collisions, and damage systems.
+Kinetiq is a physics-driven two-ball auto-battler. Two circular fighters bounce around a square arena with rotating melee arms, chip away each other’s HP with direct hits and DoT packets, and finish the round without any player input.
 
-Concept
+Quick start
+-----------
 
-Arena: A rectangular box where fighters bounce around.
+```bash
+npm install
+npm run dev
+```
 
-Fighters: Spherical units with HP, unique stats, and a rotating arm/weapon.
+The development server prints a local URL (default `http://localhost:5173`) that streams the canvas simulation. To build a production bundle or run the automated build check, use:
 
-Combat: Damage is applied when a weapon collides with an opponent. Special effects like burn (damage over time) or shields (damage reduction) can apply.
+```bash
+npm run build
+```
 
-Win Condition: The match ends when one fighter’s HP reaches zero.
+If you prefer the more traditional `npm start` or need a simple success/fail script, the project also exposes:
 
-Planned Features
+```bash
+npm start    # alias of npm run dev
+npm test     # runs the build pipeline
+```
 
-Physics simulation (elastic wall + ball collisions, rotating arms).
+Gameplay overview
+-----------------
 
-Damage system:
+- **Arena** – 760×760 fighting space with rigid black borders inside a 900×900 canvas.
+- **Fighters** – Data-driven stat blocks (HP, damage, burn DoT, shield reduction, etc.). Each fighter has a rotating arm with a circular weapon head.
+- **Combat** – Weapon overlaps inflict base + hellfire damage, apply burn DoTs, and trigger shield mitigation. Direct body collisions optionally add a demon damage graze.
+- **Damage over time** – Burn timers tick independently, refreshing when new hellfire hits land.
+- **Win condition** – The match freezes when one fighter’s HP reaches zero. Press **R** (or click the on-screen restart button) to reset with new random velocities.
 
-Base damage
+Project structure
+-----------------
 
-Bonus damage (e.g., Hellfire)
+- `index.html` – Canvas shell with the top title bar.
+- `src/main.ts` – Entry point that wires the deterministic simulation loop to rendering.
+- `src/types.ts` – Shared data types and fighter stat definitions.
+- `src/game.ts` – Physics integration, collisions, damage application, DoT handling, win logic.
+- `src/ui.ts` – Canvas drawing routines for the arena, fighters, burn/shield effects, stat panel, and restart affordances.
 
-Burn damage over time
-
-Shield % reduction
-
-Data-driven fighter definitions (JSON/TS objects).
-
-On-screen UI:
-
-Fighter names
-
-Current HP displayed on each ball
-
-Stat panel at the bottom
-
-Restart button to re-run matches.
-
-Tech Stack
-
-Language: TypeScript
-
-Rendering: HTML5 Canvas
-
-Bundler: Vite
-
-No external game engine — physics and combat written from scratch.
-
-Project Goals
-
-Recreate the look and feel of the original “Kinetiq” prototype.
-
-Keep systems modular so new fighters can be added easily.
-
-Use this as a base for experimenting with AI-assisted game dev (Cursor/Codex prompts).
-
-Roadmap
-
-Setup Vite + TS project structure
-
-Implement arena + ball physics
-
-Add rotating arms and collision detection
-
-Implement combat (damage, burn, shield)
-
-UI overlay for stats and HP
-
-Win state + restart logic
-
-Add more fighter presets
-
-Status
-
-🚧 Not yet implemented. This README documents the vision and intended direction.
+The codebase is intentionally framework-light: plain TypeScript, HTML5 Canvas, and Vite for bundling.
